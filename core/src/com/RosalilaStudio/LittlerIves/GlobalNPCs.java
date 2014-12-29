@@ -15,9 +15,14 @@ public class GlobalNPCs {
 	public static Animation extorsionada;
 	public static Animation asesinado;
 	public static Animation jefe;
+<<<<<<< HEAD
 	public static int level;
 	
 	public static void init()
+=======
+	
+	public static void init(int level)
+>>>>>>> aa45a5b3ab4fc5231618cb211aff2351e5706c5e
 	{
 		if(level==1)
 		{
@@ -59,7 +64,11 @@ public class GlobalNPCs {
 		}
 	}
 	
+<<<<<<< HEAD
 	public static void render(Batch batch)
+=======
+	public static void render(Batch batch,int level)
+>>>>>>> aa45a5b3ab4fc5231618cb211aff2351e5706c5e
 	{
 		if(level==1)
 		{
