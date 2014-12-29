@@ -35,6 +35,8 @@ public class PlayScreen extends AbstractScreen {
 	private Animation walk;
 	private Animation jump;
 	private Character Ivis;
+	private boolean in, out;
+	private static int BACKGROUND=0, WALLS=1, COINS=2;
 
 	int NIVEL = 1;
 
@@ -54,6 +56,7 @@ public class PlayScreen extends AbstractScreen {
 
 	@Override
 	public void show() {
+		in=true; out=true;
 		Paths path = Paths.C;
 		// load the Ivis frames, split them, and assign them to Animations
 		koalaTexture = new Texture(path.getPath("ivis2.png"));
@@ -255,15 +258,49 @@ public class PlayScreen extends AbstractScreen {
 				{
 					TiledMapTile tile = cell.getTile();
 					MapProperties properties = tile.getProperties();
-					if(properties.containsKey("hola")){
-						System.out.println("test");
-						game.setScreen(game.MAIN);
+					
+					if(num_layer==COINS){
+						if(properties.containsKey("Pointer")){
+							System.out.println("Pointer");
+							game.setScreen(game.MAIN);
+						}else if(properties.containsKey("Droga")){
+							System.out.println("Droga");
+							game.setScreen(game.MAIN);
+						}else if(properties.containsKey("Matar")){
+							System.out.println("Matar");
+							game.setScreen(game.MAIN);
+						}else if(properties.containsKey("Extorcion")){
+							System.out.println("Extorcion");
+							game.setScreen(game.MAIN);
+						}
+					
+						Iglesia(properties);
+					}else{
+						if(properties.containsKey("hola")){
+							System.out.println("test");
+							game.setScreen(game.MAIN);
+						}
 					}
 					
 					Rectangle rect = rectPool.obtain();
 					rect.set(x, y, 1, 1);
 					tiles.add(rect);
 				}
+			}
+		}
+	}
+
+	private void Iglesia(MapProperties properties) {
+		if(in){
+			if(properties.containsKey("Entrar")){
+				System.out.println("Entrar");
+				in=false;
+			}
+		}else if(out){
+			if(properties.containsKey("Salir")){
+				System.out.println("Salir");
+				out=false;
+				game.setScreen(game.MAIN);
 			}
 		}
 	}
