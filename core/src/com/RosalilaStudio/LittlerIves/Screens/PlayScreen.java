@@ -2,6 +2,7 @@ package com.RosalilaStudio.LittlerIves.Screens;
 
 import com.RosalilaStudio.LittlerIves.GlobalNPCs;
 import com.RosalilaStudio.LittlerIves.LittlerIvis;
+import com.RosalilaStudio.LittlerIves.Paths;
 import com.RosalilaStudio.LittlerIves.State;
 import com.RosalilaStudio.LittlerIves.Characters.Character;
 import com.badlogic.gdx.Gdx;
@@ -53,8 +54,9 @@ public class PlayScreen extends AbstractScreen {
 
 	@Override
 	public void show() {
+		Paths path = Paths.C;
 		// load the Ivis frames, split them, and assign them to Animations
-		koalaTexture = new Texture("ivis2.png");
+		koalaTexture = new Texture(path.getPath("ivis2.png"));
 		TextureRegion[] regions = TextureRegion.split(koalaTexture, 18, 26)[0];
 		stand = new Animation(0, regions[0]);
 		jump = new Animation(0, regions[1]);
@@ -67,8 +69,9 @@ public class PlayScreen extends AbstractScreen {
 		Ivis.WIDTH = 1 / 16f * regions[0].getRegionWidth();
 		Ivis.HEIGHT = 1 / 16f * regions[0].getRegionHeight();
 
+		path = Paths.M;
 		// load the map, set the unit scale to 1/16 (1 unit == 16 pixels)
-		map = new TmxMapLoader().load("nivel" + GlobalNPCs.level + ".tmx");
+		map = new TmxMapLoader().load(path.getPath("nivel" + GlobalNPCs.level + ".tmx"));
 		renderer = new OrthogonalTiledMapRenderer(map, 1 / 16f);
 
 		// create an orthographic camera, shows us 30x20 units of the world
@@ -80,7 +83,8 @@ public class PlayScreen extends AbstractScreen {
 		Ivis = new Character();
 		Ivis.position.set(20, 15);
 
-		Music oggMusic = Gdx.audio.newMusic(Gdx.files.internal("music.ogg"));
+		path = Paths.S;
+		Music oggMusic = Gdx.audio.newMusic(Gdx.files.internal(path.getPath("music.ogg")));
 		oggMusic.play();
 
 		GlobalNPCs.init();

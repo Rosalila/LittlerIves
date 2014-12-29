@@ -2,6 +2,7 @@ package com.RosalilaStudio.LittlerIves.Listeners;
 
 import com.RosalilaStudio.LittlerIves.GlobalNPCs;
 import com.RosalilaStudio.LittlerIves.LittlerIvis;
+import com.RosalilaStudio.LittlerIves.Screens.InfoScreen;
 import com.RosalilaStudio.LittlerIves.Screens.PlayScreen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -24,7 +25,7 @@ public class InputDYAListener extends InputListener {
 	public boolean touchDown(InputEvent e, float x, float y, int pointer,
 			int button) {
 		GlobalNPCs.level=num;
-		game.setScreen(new PlayScreen(game));
+		game.setScreen(game.INFO);
 		System.out.println("TouchDown" + num + "!!");
 		return true;
 

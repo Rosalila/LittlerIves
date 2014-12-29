@@ -1,6 +1,9 @@
 package com.RosalilaStudio.LittlerIves.Screens;
 
+import javax.sound.midi.Patch;
+
 import com.RosalilaStudio.LittlerIves.LittlerIvis;
+import com.RosalilaStudio.LittlerIves.Paths;
 import com.RosalilaStudio.LittlerIves.Listeners.InputDYAListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -34,17 +37,19 @@ public class MenuScreen extends AbstractScreen {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
+		Paths path = Paths.I;
+		
 		camera = new OrthographicCamera(1, h/w);
 		batch = new SpriteBatch();
-		Texture txt = new Texture("background.png");
+		Texture txt = new Texture(path.getPath("background.png"));
 		txt.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		TextureRegion txtr = new TextureRegion(txt, 512, 275);
-		stg = new Stage();
-		stg.getViewport().update(512, 275);
+		stg = new Stage(game.getView(), game.getSb());
+		stg.getViewport().update(game.getWidth(), game.getHeight());
 		Image img = new Image(txtr);
 		stg.addActor(img);
 		img.setFillParent(true);
-		
+		/*
 		intro1T = new TextureRegion(new Texture("intro1.png"), 512,275);
 		intro2T = new TextureRegion(new Texture("intro2.png"), 512,275);
 		intro3T = new TextureRegion(new Texture("intro3.png"), 512,275);
@@ -68,13 +73,13 @@ public class MenuScreen extends AbstractScreen {
 		stg.addActor(intro3);
 		stg.addActor(intro4);
 		stg.addActor(intro5);
-		
+		*/
 		int heit = 80;
-		button1 = new Texture("1.png");
-		button2 = new Texture("2.png");
-		button3 = new Texture("3.png");
-		button4 = new Texture("4.png");
-		button5 = new Texture("5.png");
+		button1 = new Texture(path.getPath("1.png"));
+		button2 = new Texture(path.getPath("2.png"));
+		button3 = new Texture(path.getPath("3.png"));
+		button4 = new Texture(path.getPath("4.png"));
+		button5 = new Texture(path.getPath("5.png"));
 		
 		button1.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		button2.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -129,7 +134,7 @@ public class MenuScreen extends AbstractScreen {
 
 	@Override
 	public void resize(int width, int height) {
-		stg.getViewport().update(512, 275);
+		stg.getViewport().update(game.getWidth(), game.getHeight());
 	}
 
 	@Override
@@ -146,6 +151,7 @@ public class MenuScreen extends AbstractScreen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			
 		stg.draw();
+		stg.act();
 	}
 
 	@Override

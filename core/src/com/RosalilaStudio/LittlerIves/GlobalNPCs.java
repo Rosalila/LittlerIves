@@ -19,41 +19,42 @@ public class GlobalNPCs {
 	
 	public static void init()
 	{
+		String path = Paths.C.getPath("");
 		if(level==1)
 		{
-			Texture texture = new Texture("policia.png"); 
+			Texture texture = new Texture(path+"policia.png"); 
 			TextureRegion[] regions = TextureRegion.split(texture, 18, 26)[0];
 			policia = new Animation(0, regions[0]);
 		}
 		if(level==2)
 		{
-			Texture texture1 = new Texture("comprador1.png"); 
+			Texture texture1 = new Texture(path+"comprador1.png"); 
 			TextureRegion[] regions = TextureRegion.split(texture1, 18, 26)[0];
 			comprador1 = new Animation(0, regions[0]);
 			
-			Texture texture2 = new Texture("comprador2.png"); 
+			Texture texture2 = new Texture(path+"comprador2.png"); 
 			TextureRegion[] regions2 = TextureRegion.split(texture2, 18, 26)[0];
 			comprador2 = new Animation(0, regions2[0]);
 			
-			Texture texture3 = new Texture("comprador3.png"); 
+			Texture texture3 = new Texture(path+"comprador3.png"); 
 			TextureRegion[] regions3 = TextureRegion.split(texture3, 18, 26)[0];
 			comprador3 = new Animation(0, regions3[0]);
 		}
 		if(level==3)
 		{
-			Texture texture = new Texture("extorsionada.png"); 
+			Texture texture = new Texture(path+"extorsionada.png"); 
 			TextureRegion[] regions = TextureRegion.split(texture, 18, 26)[0];
 			extorsionada = new Animation(0, regions[0]);
 		}
 		if(level==4)
 		{
-			Texture texture = new Texture("asesinado.png"); 
+			Texture texture = new Texture(path+"asesinado.png"); 
 			TextureRegion[] regions = TextureRegion.split(texture, 18, 26)[0];
 			asesinado = new Animation(0, regions[0]);
 		}
 		if(level==5)
 		{
-			Texture texture = new Texture("jefe.png"); 
+			Texture texture = new Texture(path+"jefe.png"); 
 			TextureRegion[] regions = TextureRegion.split(texture, 18, 26)[0];
 			jefe = new Animation(0, regions[0]);
 		}
