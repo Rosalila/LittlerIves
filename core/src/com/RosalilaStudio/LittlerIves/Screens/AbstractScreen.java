@@ -1,23 +1,13 @@
 package com.RosalilaStudio.LittlerIves.Screens;
 
-<<<<<<< HEAD
 import com.RosalilaStudio.LittlerIves.LittlerIvis;
-=======
-import com.RosalilaStudio.LittlerIves.LittlerIves;
->>>>>>> aa45a5b3ab4fc5231618cb211aff2351e5706c5e
 import com.badlogic.gdx.Screen;
 
 public abstract class AbstractScreen implements Screen {
 	
-<<<<<<< HEAD
 	protected LittlerIvis game;
 
 	public AbstractScreen(LittlerIvis game) {
-=======
-	protected LittlerIves game;
-
-	public AbstractScreen(LittlerIves game) {
->>>>>>> aa45a5b3ab4fc5231618cb211aff2351e5706c5e
 		this.game=game;
 	}
 

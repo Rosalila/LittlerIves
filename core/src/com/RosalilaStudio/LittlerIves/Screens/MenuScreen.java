@@ -1,10 +1,6 @@
 package com.RosalilaStudio.LittlerIves.Screens;
 
-<<<<<<< HEAD
 import com.RosalilaStudio.LittlerIves.LittlerIvis;
-=======
-import com.RosalilaStudio.LittlerIves.LittlerIves;
->>>>>>> aa45a5b3ab4fc5231618cb211aff2351e5706c5e
 import com.RosalilaStudio.LittlerIves.Listeners.InputDYAListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,11 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class MenuScreen extends AbstractScreen {
 
-<<<<<<< HEAD
 	public MenuScreen(LittlerIvis game) {
-=======
-	public MenuScreen(LittlerIves game) {
->>>>>>> aa45a5b3ab4fc5231618cb211aff2351e5706c5e
 		super(game);
 	}
 
@@ -132,10 +124,7 @@ public class MenuScreen extends AbstractScreen {
 	public void dispose() {
 		batch.dispose();
 		texture.dispose();
-<<<<<<< HEAD
 		stg.dispose();
-=======
->>>>>>> aa45a5b3ab4fc5231618cb211aff2351e5706c5e
 	}
 
 	@Override
@@ -161,11 +150,6 @@ public class MenuScreen extends AbstractScreen {
 
 	@Override
 	public void hide() {
-<<<<<<< HEAD
 		Gdx.input.setInputProcessor(null);
-=======
-		// TODO Auto-generated method stub
-		
->>>>>>> aa45a5b3ab4fc5231618cb211aff2351e5706c5e
 	}
 }
