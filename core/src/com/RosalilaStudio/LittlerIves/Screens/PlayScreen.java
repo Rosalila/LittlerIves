@@ -30,15 +30,14 @@ public class PlayScreen extends AbstractScreen {
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
-	private Texture koalaTexture;
-	private Animation stand;
-	private Animation walk;
-	private Animation jump;
+//	private Texture koalaTexture;
+//	private Animation stand;
+//	private Animation walk;
+//	private Animation jump;
 	private Character Ivis;
 	private boolean in, out;
 	private static int BACKGROUND=0, WALLS=1, COINS=2;
-
-	int NIVEL = 1;
+	private int counterLevel2;
 
 	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
 		@Override
@@ -56,23 +55,11 @@ public class PlayScreen extends AbstractScreen {
 
 	@Override
 	public void show() {
+		// Initialize of Variables
 		in=true; out=true;
-		Paths path = Paths.C;
-		// load the Ivis frames, split them, and assign them to Animations
-		koalaTexture = new Texture(path.getPath("ivis2.png"));
-		TextureRegion[] regions = TextureRegion.split(koalaTexture, 18, 26)[0];
-		stand = new Animation(0, regions[0]);
-		jump = new Animation(0, regions[1]);
-		walk = new Animation(0.15f, regions[2], regions[3], regions[4]);
-		walk.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
+		Paths path = Paths.M;
+		counterLevel2 = 0;
 
-		// figure out the width and height of the Ivis for collision
-		// detection and rendering by converting a Ivis frames pixel
-		// size into world units (1 unit == 16 pixels)
-		Ivis.WIDTH = 1 / 16f * regions[0].getRegionWidth();
-		Ivis.HEIGHT = 1 / 16f * regions[0].getRegionHeight();
-
-		path = Paths.M;
 		// load the map, set the unit scale to 1/16 (1 unit == 16 pixels)
 		map = new TmxMapLoader().load(path.getPath("nivel" + GlobalNPCs.level + ".tmx"));
 		renderer = new OrthogonalTiledMapRenderer(map, 1 / 16f);
@@ -109,12 +96,12 @@ public class PlayScreen extends AbstractScreen {
 		// let the camera follow the koala, x-axis only
 		camera.position.x = Ivis.position.x;
 		camera.update();
-
+		
 		// set the tile map rendere view based on what the
 		// camera sees and render the map
 		renderer.setView(camera);
 		renderer.render();
-
+		
 		// render the Ivis
 		renderCharacter(deltaTime);
 	}
@@ -265,12 +252,17 @@ public class PlayScreen extends AbstractScreen {
 							game.setScreen(game.MAIN);
 						}else if(properties.containsKey("Droga")){
 							System.out.println("Droga");
-							game.setScreen(game.MAIN);
+							counterLevel2++;
+							if(counterLevel2==3)
+								game.setScreen(game.MAIN);
 						}else if(properties.containsKey("Matar")){
 							System.out.println("Matar");
 							game.setScreen(game.MAIN);
 						}else if(properties.containsKey("Extorcion")){
 							System.out.println("Extorcion");
+							game.setScreen(game.MAIN);
+						}else if(properties.containsKey("Die")){
+							System.out.println("Die");
 							game.setScreen(game.MAIN);
 						}
 					
@@ -306,24 +298,9 @@ public class PlayScreen extends AbstractScreen {
 	}
 
 	private void renderCharacter(float deltaTime) {
-		// based on the Ivis state, get the animation frame
-		TextureRegion frame = null;
-		switch(Ivis.state) {
-			case Standing: frame = stand.getKeyFrame(Ivis.stateTime); break;
-			case Walking: frame = walk.getKeyFrame(Ivis.stateTime); break;
-			case Jumping: frame = jump.getKeyFrame(Ivis.stateTime); break; 
-		}
-
-		// draw Ivis, depending on the current velocity
-		// on the x-axis, draw the Ivis facing either right
-		// or left
 		Batch batch = renderer.getSpriteBatch();
 		batch.begin();
-		if(Ivis.facesRight) {
-			batch.draw(frame, Ivis.position.x, Ivis.position.y, Character.WIDTH, Character.HEIGHT);
-		} else {
-			batch.draw(frame, Ivis.position.x + Character.WIDTH, Ivis.position.y, -Character.WIDTH, Character.HEIGHT);
-		}
+		Ivis.draw(batch, 1);
 		GlobalNPCs.render(batch);
 		batch.end();
 	}
