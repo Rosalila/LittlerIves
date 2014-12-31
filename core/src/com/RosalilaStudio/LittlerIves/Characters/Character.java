@@ -2,9 +2,6 @@ package com.RosalilaStudio.LittlerIves.Characters;
 
 import com.RosalilaStudio.LittlerIves.Paths;
 import com.RosalilaStudio.LittlerIves.State;
-import com.RosalilaStudio.LittlerIves.Screens.PlayScreen;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -13,12 +10,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Character extends Actor {
+	private String name;
 
-	public static float WIDTH;
-	public static float HEIGHT;
-	public static float MAX_VELOCITY;
-	public static float JUMP_VELOCITY;
-	public static float DAMPING;
+	public float WIDTH;
+	public float HEIGHT;
+	public float MAX_VELOCITY;
+	public float JUMP_VELOCITY;
+	public float DAMPING;
 
 	// Velocity, State and direction of the Character
 	private final Vector2 velocity;
@@ -34,7 +32,8 @@ public class Character extends Actor {
 	private Animation walk;
 	private Animation jump;
 
-	public Character() {
+	public Character(String name) {
+		this.name=name;
 		MAX_VELOCITY = 10f;
 		JUMP_VELOCITY = 40f;
 		DAMPING = 0.87f;
@@ -48,7 +47,7 @@ public class Character extends Actor {
 
 	private void init() {
 		// load the Ivis frames, split them, and assign them to Animations
-		koalaTexture = new Texture(Paths.C.getPath("ivis2.png"));
+		koalaTexture = new Texture(Paths.C.getPath(name));
 		TextureRegion[] regions = TextureRegion.split(koalaTexture, 18, 26)[0];
 		stand = new Animation(0, regions[0]);
 		jump = new Animation(0, regions[1]);
@@ -110,8 +109,8 @@ public class Character extends Actor {
 	
 	public void addVelocityX(int x){
 		switch(x){
-		case 1: velocity.x	= MAX_VELOCITY; break;
-		case -1: velocity.x	= MAX_VELOCITY; break;
+		case 1: velocity.x	=  MAX_VELOCITY; break;
+		case -1: velocity.x	= -MAX_VELOCITY; break;
 		}
 	}
 	
@@ -167,6 +166,10 @@ public class Character extends Actor {
 	
 	public Vector2 getVelocity() {
 		return velocity;
+	}
+	
+	public Animation getStand() {
+		return stand;
 	}
 	
 //	public State getState() {

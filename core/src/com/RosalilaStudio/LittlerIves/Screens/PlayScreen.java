@@ -43,7 +43,7 @@ public class PlayScreen extends AbstractScreen {
 	};
 	private Array<Rectangle> tiles = new Array<Rectangle>();
 
-	public static final float GRAVITY = -2.5f;
+	private static final float GRAVITY = -2.5f;
 
 	public PlayScreen(LittlerIvis game) {
 		super(game);
@@ -66,7 +66,7 @@ public class PlayScreen extends AbstractScreen {
 		camera.update();
 
 		// create the Ivis we want to move around the world
-		Ivis = new Character();
+		Ivis = new Character("ivis2.png");
 		Ivis.setPosition(20, 15); //exch for position (Vector 2)
 
 		path = Paths.S;
@@ -130,8 +130,8 @@ public class PlayScreen extends AbstractScreen {
 		Ivis.addVelocity(0, GRAVITY); //velocity.add(0, GRAVITY);
 
 		// clamp the velocity to the maximum, x-axis only
-		if(Math.abs(Ivis.getVelocity().x) > Character.MAX_VELOCITY) {
-			Ivis.getVelocity().x = Math.signum(Ivis.getVelocity().x) * Character.MAX_VELOCITY;
+		if(Math.abs(Ivis.getVelocity().x) > Ivis.MAX_VELOCITY) {
+			Ivis.getVelocity().x = Math.signum(Ivis.getVelocity().x) * Ivis.MAX_VELOCITY;
 		}
 
 		// clamp the velocity to 0 if it's < 1, and set the state to standign
@@ -148,15 +148,15 @@ public class PlayScreen extends AbstractScreen {
 		// if the Ivis is moving right, check the tiles to the right of it's
 		// right bounding box edge, otherwise check the ones to the left
 		Rectangle koalaRect = rectPool.obtain();
-		koalaRect.set(Ivis.getX(), Ivis.getY(), Character.WIDTH, Character.HEIGHT);
+		koalaRect.set(Ivis.getX(), Ivis.getY(), Ivis.WIDTH, Ivis.HEIGHT);
 		int startX, startY, endX, endY;
 		if(Ivis.getVelocity().x > 0) {
-			startX = endX = (int)(Ivis.getX() + Character.WIDTH + Ivis.getVelocity().x);
+			startX = endX = (int)(Ivis.getX() + Ivis.WIDTH + Ivis.getVelocity().x);
 		} else {
 			startX = endX = (int)(Ivis.getX() + Ivis.getVelocity().x);
 		}
 		startY = (int)(Ivis.getY());
-		endY = (int)(Ivis.getY() + Character.HEIGHT);
+		endY = (int)(Ivis.getY() + Ivis.HEIGHT);
 		getTiles(startX, startY, endX, endY, tiles,1);
 		koalaRect.x += Ivis.getVelocity().x;
 		for(Rectangle tile: tiles) {
@@ -170,12 +170,12 @@ public class PlayScreen extends AbstractScreen {
 		// if the Ivis is moving upwards, check the tiles to the top of it's
 		// top bounding box edge, otherwise check the ones to the bottom
 		if(Ivis.getVelocity().y > 0) {
-			startY = endY = (int)(Ivis.getY() + Character.HEIGHT + Ivis.getVelocity().y);
+			startY = endY = (int)(Ivis.getY() + Ivis.HEIGHT + Ivis.getVelocity().y);
 		} else {
 			startY = endY = (int)(Ivis.getY() + Ivis.getVelocity().y);
 		}
 		startX = (int)(Ivis.getX());
-		endX = (int)(Ivis.getX() + Character.WIDTH);
+		endX = (int)(Ivis.getX() + Ivis.WIDTH);
 		getTiles(startX, startY, endX, endY, tiles,1);
 		koalaRect.y += Ivis.getVelocity().y;
 		for(Rectangle tile: tiles) {
@@ -184,7 +184,7 @@ public class PlayScreen extends AbstractScreen {
 				// so it is just below/above the tile we collided with
 				// this removes bouncing :)
 				if(Ivis.getVelocity().y > 0) {
-					Ivis.setY(tile.y - Character.HEIGHT);
+					Ivis.setY(tile.y - Ivis.HEIGHT);
 					// we hit a block jumping upwards, let's destroy it!
 					TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(1);
 //					layer.setCell((int)tile.x, (int)tile.y, null);

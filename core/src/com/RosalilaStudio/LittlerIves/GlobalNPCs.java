@@ -1,20 +1,17 @@
 package com.RosalilaStudio.LittlerIves;
 
 import com.RosalilaStudio.LittlerIves.Characters.Character;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GlobalNPCs {
-
-	public static Animation policia;
-	public static Animation comprador1;
-	public static Animation comprador2;
-	public static Animation comprador3;
-	public static Animation extorsionada;
-	public static Animation asesinado;
-	public static Animation jefe;
+	
+	private static Character policia;
+	public static Character comprador1;
+	public static Character comprador2;
+	public static Character comprador3;
+	public static Character extorsionada;
+	public static Character asesinado;
+	public static Character jefe;
 	public static int level;
 	
 	public static void init()
@@ -22,41 +19,25 @@ public class GlobalNPCs {
 		String path = Paths.C.getPath("");
 		if(level==1)
 		{
-			Texture texture = new Texture(path+"policia.png"); 
-			TextureRegion[] regions = TextureRegion.split(texture, 18, 26)[0];
-			policia = new Animation(0, regions[0]);
+			policia = new Character("policia.png");
 		}
 		if(level==2)
 		{
-			Texture texture1 = new Texture(path+"comprador1.png"); 
-			TextureRegion[] regions = TextureRegion.split(texture1, 18, 26)[0];
-			comprador1 = new Animation(0, regions[0]);
-			
-			Texture texture2 = new Texture(path+"comprador2.png"); 
-			TextureRegion[] regions2 = TextureRegion.split(texture2, 18, 26)[0];
-			comprador2 = new Animation(0, regions2[0]);
-			
-			Texture texture3 = new Texture(path+"comprador3.png"); 
-			TextureRegion[] regions3 = TextureRegion.split(texture3, 18, 26)[0];
-			comprador3 = new Animation(0, regions3[0]);
+			comprador1 = new Character("comprador1.png"); //(0, regions[0]);
+			comprador2 = new Character("comprador2.png"); //(0, regions2[0]);
+			comprador3 = new Character("comprador3.png"); //(0, regions3[0]);
 		}
 		if(level==3)
 		{
-			Texture texture = new Texture(path+"extorsionada.png"); 
-			TextureRegion[] regions = TextureRegion.split(texture, 18, 26)[0];
-			extorsionada = new Animation(0, regions[0]);
+			extorsionada = new Character("extorsionada.png"); //(0, regions[0]);
 		}
 		if(level==4)
 		{
-			Texture texture = new Texture(path+"asesinado.png"); 
-			TextureRegion[] regions = TextureRegion.split(texture, 18, 26)[0];
-			asesinado = new Animation(0, regions[0]);
+			asesinado = new Character("asesinado.png"); //(0, regions[0]);
 		}
 		if(level==5)
 		{
-			Texture texture = new Texture(path+"jefe.png"); 
-			TextureRegion[] regions = TextureRegion.split(texture, 18, 26)[0];
-			jefe = new Animation(0, regions[0]);
+			jefe = new Character("jefe.png"); //(0, regions[0]);
 		}
 	}
 	
@@ -66,25 +47,25 @@ public class GlobalNPCs {
 		{
 			float x=124f;
 			float y=2f;
-			batch.draw(policia.getKeyFrame(0),x + Character.WIDTH, y, - Character.WIDTH, Character.HEIGHT);
+			batch.draw(policia.getStand().getKeyFrame(0),x + policia.WIDTH, y, - policia.WIDTH, policia.HEIGHT);
 		}
 		if(level==2)
 		{
-			batch.draw(comprador1.getKeyFrame(0),(float)68f + (float)Character.WIDTH, (float)10f, -(float)Character.WIDTH, (float)Character.HEIGHT);
-			batch.draw(comprador2.getKeyFrame(0),(float)110f + (float)Character.WIDTH, (float)14f, -(float)Character.WIDTH, (float)Character.HEIGHT);
-			batch.draw(comprador3.getKeyFrame(0),(float)176f + (float)Character.WIDTH, (float)2f, -(float)Character.WIDTH, (float)Character.HEIGHT);
+			batch.draw(comprador1.getStand().getKeyFrame(0),(float)68f + (float)comprador1.WIDTH, (float)10f, -(float)comprador1.WIDTH, (float)comprador1.HEIGHT);
+			batch.draw(comprador2.getStand().getKeyFrame(0),(float)110f + (float)comprador2.WIDTH, (float)14f, -(float)comprador2.WIDTH, (float)comprador2.HEIGHT);
+			batch.draw(comprador3.getStand().getKeyFrame(0),(float)176f + (float)comprador3.WIDTH, (float)2f, -(float)comprador3.WIDTH, (float)comprador3.HEIGHT);
 		}
 		if(level==3)
 		{
-			batch.draw(extorsionada.getKeyFrame(0),(float)122f + (float)Character.WIDTH, (float)2f, -(float)Character.WIDTH, (float)Character.HEIGHT);
+			batch.draw(extorsionada.getStand().getKeyFrame(0),(float)122f + (float)extorsionada.WIDTH, (float)2f, -(float)extorsionada.WIDTH, (float)extorsionada.HEIGHT);
 		}
 		if(level==4)
 		{
-			batch.draw(asesinado.getKeyFrame(0),(float)90f + (float)Character.WIDTH, (float)7f, -(float)Character.WIDTH, (float)Character.HEIGHT);
+			batch.draw(asesinado.getStand().getKeyFrame(0),(float)90f + (float)asesinado.WIDTH, (float)7f, -(float)asesinado.WIDTH, (float)asesinado.HEIGHT);
 		}
 		if(level==5)
 		{
-			batch.draw(jefe.getKeyFrame(0),(float)38f + (float)Character.WIDTH, (float)2f, -(float)Character.WIDTH, (float)Character.HEIGHT);
+			batch.draw(jefe.getStand().getKeyFrame(0),(float)38f + (float)jefe.WIDTH, (float)2f, -(float)jefe.WIDTH, (float)jefe.HEIGHT);
 		}
 	}
 }
