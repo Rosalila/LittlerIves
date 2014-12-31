@@ -3,6 +3,8 @@ package com.RosalilaStudio.LittlerIves.Characters;
 import com.RosalilaStudio.LittlerIves.Paths;
 import com.RosalilaStudio.LittlerIves.State;
 import com.RosalilaStudio.LittlerIves.Screens.PlayScreen;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -18,13 +20,14 @@ public class Character extends Actor {
 	public static float JUMP_VELOCITY;
 	public static float DAMPING;
 
-	public final Vector2 position;
-	public final Vector2 velocity;
+	// Velocity, State and direction of the Character
+	private final Vector2 velocity;
 	public State state;
 	public float stateTime;
 	public boolean facesRight;
 	public boolean grounded;
 
+	// Textures and Animations
 	private Texture koalaTexture;
 	private TextureRegion frame;
 	private Animation stand;
@@ -35,7 +38,6 @@ public class Character extends Actor {
 		MAX_VELOCITY = 10f;
 		JUMP_VELOCITY = 40f;
 		DAMPING = 0.87f;
-		position = new Vector2();
 		velocity = new Vector2();
 		state = State.Walking;
 		stateTime = 0;
@@ -63,7 +65,7 @@ public class Character extends Actor {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-
+		update(delta);
 	}
 
 	@Override
@@ -88,12 +90,91 @@ public class Character extends Actor {
 		// on the x-axis, draw the Ivis facing either right
 		// or left
 		if (facesRight) {
-			batch.draw(frame, position.x, position.y, Character.WIDTH,
-					Character.HEIGHT);
+			batch.draw(frame, getX(), getY(), WIDTH, // exch for position
+					HEIGHT);
 		} else {
-			batch.draw(frame, position.x + Character.WIDTH, position.y,
-					-Character.WIDTH, Character.HEIGHT);
+			batch.draw(frame, getX() + WIDTH, getY(), // exch for position
+					-WIDTH, HEIGHT);
 		}
 	}
+	
+	public void addPosition(){
+		setX(getX()+velocity.x);
+		setY(getY()+velocity.y);
+	}
+	
+	public void addVelocity(float x, float y){
+		velocity.x+=x;
+		velocity.y+=y;
+	}
+	
+	public void addVelocityX(int x){
+		switch(x){
+		case 1: velocity.x	= MAX_VELOCITY; break;
+		case -1: velocity.x	= MAX_VELOCITY; break;
+		}
+	}
+	
+	public void addVelocityY() {
+		velocity.y+=JUMP_VELOCITY;
+	}
+	
+	private void update(float delta){
+		
+		// unscale the velocity by the inverse delta time and set
+		// the latest position
+		addPosition();
+		velocity.scl(1 / delta);
+
+		// Apply damping to the velocity on the x-axis so we don't
+		// walk infinitely once a key was pressed
+		velocity.x *= DAMPING;
+	}
+	
+	//Seters
+//	public void setStateTime(float stateTime) {
+//		this.stateTime += stateTime;
+//	}
+//	
+//	public void setState(State state) {
+//		this.state = state;
+//	}
+//	
+//	public void setGrounded(boolean grounded) {
+//		this.grounded = grounded;
+//	}
+	
+	public void setVelocityX(float x){
+		velocity.x=x;
+	}
+	
+	public void setVelocityY(float y){
+		velocity.y=y;
+	}
+	
+//	public void setFacesRight(boolean facesRight) {
+//		this.facesRight = facesRight;
+//	}
+	
+	//Geters
+//	public boolean isGrounded(){
+//		return grounded;
+//	}
+//	
+//	public Vector2 getPosition() {
+//		return position;
+//	}
+	
+	public Vector2 getVelocity() {
+		return velocity;
+	}
+	
+//	public State getState() {
+//		return state;
+//	}
+//	
+//	public float getStateTime() {
+//		return stateTime;
+//	}
 
 }

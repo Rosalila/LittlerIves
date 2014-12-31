@@ -30,10 +30,6 @@ public class PlayScreen extends AbstractScreen {
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
-//	private Texture koalaTexture;
-//	private Animation stand;
-//	private Animation walk;
-//	private Animation jump;
 	private Character Ivis;
 	private boolean in, out;
 	private static int BACKGROUND=0, WALLS=1, COINS=2;
@@ -47,7 +43,7 @@ public class PlayScreen extends AbstractScreen {
 	};
 	private Array<Rectangle> tiles = new Array<Rectangle>();
 
-	private static final float GRAVITY = -2.5f;
+	public static final float GRAVITY = -2.5f;
 
 	public PlayScreen(LittlerIvis game) {
 		super(game);
@@ -71,7 +67,7 @@ public class PlayScreen extends AbstractScreen {
 
 		// create the Ivis we want to move around the world
 		Ivis = new Character();
-		Ivis.position.set(20, 15);
+		Ivis.setPosition(20, 15); //exch for position (Vector 2)
 
 		path = Paths.S;
 		Music oggMusic = Gdx.audio.newMusic(Gdx.files.internal(path.getPath("music.ogg")));
@@ -94,7 +90,7 @@ public class PlayScreen extends AbstractScreen {
 		updateCharacter(deltaTime);
 
 		// let the camera follow the koala, x-axis only
-		camera.position.x = Ivis.position.x;
+		camera.position.x = Ivis.getX(); //getX(); // exch for position (Vector 2)
 		camera.update();
 		
 		// set the tile map rendere view based on what the
@@ -107,96 +103,97 @@ public class PlayScreen extends AbstractScreen {
 	}
 	
 	private void updateCharacter(float deltaTime) {
+		
 		if(deltaTime == 0) return;
-		Ivis.stateTime += deltaTime;	
+		Ivis.stateTime += deltaTime;
 
 		// check input and apply to velocity & state
 		if((Gdx.input.isKeyPressed(Keys.SPACE) || isTouched(0.75f, 1)) && Ivis.grounded) {
-			Ivis.velocity.y += Character.JUMP_VELOCITY;
+			Ivis.addVelocityY(); //velocity.y += Character.JUMP_VELOCITY;
 			Ivis.state = State.Jumping;
-			Ivis.grounded = false;
+			Ivis.grounded =false;
 		}
 
 		if(Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A) || isTouched(0, 0.25f)) {
-			Ivis.velocity.x = -Character.MAX_VELOCITY;
+			Ivis.addVelocityX(-1); //velocity.x = -Character.MAX_VELOCITY;
 			if(Ivis.grounded) Ivis.state = State.Walking;
 			Ivis.facesRight = false;
 		}
 
 		if(Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.D) || isTouched(0.25f, 0.5f)) {
-			Ivis.velocity.x = Character.MAX_VELOCITY;
+			Ivis.addVelocityX(1); //velocity.x = Character.MAX_VELOCITY;
 			if(Ivis.grounded) Ivis.state = State.Walking;
 			Ivis.facesRight = true;
 		}
 
 		// apply gravity if we are falling
-		Ivis.velocity.add(0, GRAVITY);
+		Ivis.addVelocity(0, GRAVITY); //velocity.add(0, GRAVITY);
 
 		// clamp the velocity to the maximum, x-axis only
-		if(Math.abs(Ivis.velocity.x) > Character.MAX_VELOCITY) {
-			Ivis.velocity.x = Math.signum(Ivis.velocity.x) * Character.MAX_VELOCITY;
+		if(Math.abs(Ivis.getVelocity().x) > Character.MAX_VELOCITY) {
+			Ivis.getVelocity().x = Math.signum(Ivis.getVelocity().x) * Character.MAX_VELOCITY;
 		}
 
 		// clamp the velocity to 0 if it's < 1, and set the state to standign
-		if(Math.abs(Ivis.velocity.x) < 1) {
-			Ivis.velocity.x = 0;
+		if(Math.abs(Ivis.getVelocity().x) < 1) {
+			Ivis.setVelocityX(0); //velocity.x = 0;
 			if(Ivis.grounded) Ivis.state = State.Standing;
 		}
 
 		// multiply by delta time so we know how far we go
 		// in this frame
-		Ivis.velocity.scl(deltaTime);
+		Ivis.getVelocity().scl(deltaTime);
 
 		// perform collision detection & response, on each axis, separately
 		// if the Ivis is moving right, check the tiles to the right of it's
 		// right bounding box edge, otherwise check the ones to the left
 		Rectangle koalaRect = rectPool.obtain();
-		koalaRect.set(Ivis.position.x, Ivis.position.y, Character.WIDTH, Character.HEIGHT);
+		koalaRect.set(Ivis.getX(), Ivis.getY(), Character.WIDTH, Character.HEIGHT);
 		int startX, startY, endX, endY;
-		if(Ivis.velocity.x > 0) {
-			startX = endX = (int)(Ivis.position.x + Character.WIDTH + Ivis.velocity.x);
+		if(Ivis.getVelocity().x > 0) {
+			startX = endX = (int)(Ivis.getX() + Character.WIDTH + Ivis.getVelocity().x);
 		} else {
-			startX = endX = (int)(Ivis.position.x + Ivis.velocity.x);
+			startX = endX = (int)(Ivis.getX() + Ivis.getVelocity().x);
 		}
-		startY = (int)(Ivis.position.y);
-		endY = (int)(Ivis.position.y + Character.HEIGHT);
+		startY = (int)(Ivis.getY());
+		endY = (int)(Ivis.getY() + Character.HEIGHT);
 		getTiles(startX, startY, endX, endY, tiles,1);
-		koalaRect.x += Ivis.velocity.x;
+		koalaRect.x += Ivis.getVelocity().x;
 		for(Rectangle tile: tiles) {
 			if(koalaRect.overlaps(tile)) {
-				Ivis.velocity.x = 0;
+				Ivis.setVelocityX(0); //velocity.x = 0;
 				break;
 			}
 		}
-		koalaRect.x = Ivis.position.x;
+		koalaRect.x = Ivis.getX();
 
 		// if the Ivis is moving upwards, check the tiles to the top of it's
 		// top bounding box edge, otherwise check the ones to the bottom
-		if(Ivis.velocity.y > 0) {
-			startY = endY = (int)(Ivis.position.y + Character.HEIGHT + Ivis.velocity.y);
+		if(Ivis.getVelocity().y > 0) {
+			startY = endY = (int)(Ivis.getY() + Character.HEIGHT + Ivis.getVelocity().y);
 		} else {
-			startY = endY = (int)(Ivis.position.y + Ivis.velocity.y);
+			startY = endY = (int)(Ivis.getY() + Ivis.getVelocity().y);
 		}
-		startX = (int)(Ivis.position.x);
-		endX = (int)(Ivis.position.x + Character.WIDTH);
+		startX = (int)(Ivis.getX());
+		endX = (int)(Ivis.getX() + Character.WIDTH);
 		getTiles(startX, startY, endX, endY, tiles,1);
-		koalaRect.y += Ivis.velocity.y;
+		koalaRect.y += Ivis.getVelocity().y;
 		for(Rectangle tile: tiles) {
 			if(koalaRect.overlaps(tile)) {
 				// we actually reset the Ivis y-position here
 				// so it is just below/above the tile we collided with
 				// this removes bouncing :)
-				if(Ivis.velocity.y > 0) {
-					Ivis.position.y = tile.y - Character.HEIGHT;
+				if(Ivis.getVelocity().y > 0) {
+					Ivis.setY(tile.y - Character.HEIGHT);
 					// we hit a block jumping upwards, let's destroy it!
 					TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(1);
 //					layer.setCell((int)tile.x, (int)tile.y, null);
 				} else {
-					Ivis.position.y = tile.y + tile.height;
+					Ivis.setY(tile.y + tile.height);
 					// if we hit the ground, mark us as grounded so we can jump
 					Ivis.grounded = true;
 				}
-				Ivis.velocity.y = 0;
+				Ivis.setVelocityY(0); //velocity.y = 0;
 				break;
 			}
 		}
@@ -210,15 +207,7 @@ public class PlayScreen extends AbstractScreen {
 		}
 		//fin cambio
 		rectPool.free(koalaRect);
-
-		// unscale the velocity by the inverse delta time and set 
-		// the latest position
-		Ivis.position.add(Ivis.velocity);
-		Ivis.velocity.scl(1/deltaTime);
-
-		// Apply damping to the velocity on the x-axis so we don't
-		// walk infinitely once a key was pressed
-		Ivis.velocity.x *= Character.DAMPING;
+		Ivis.act(deltaTime);
 
 	}
 
