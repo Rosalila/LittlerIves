@@ -6,14 +6,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Character extends Actor {
 	private String name;
 
-	public float WIDTH;
-	public float HEIGHT;
 	public float MAX_VELOCITY;
 	public float JUMP_VELOCITY;
 	public float DAMPING;
@@ -24,6 +23,7 @@ public class Character extends Actor {
 	public float stateTime;
 	public boolean facesRight;
 	public boolean grounded;
+	public boolean animation;
 
 	// Textures and Animations
 	private Texture koalaTexture;
@@ -31,6 +31,9 @@ public class Character extends Actor {
 	private Animation stand;
 	private Animation walk;
 	private Animation jump;
+	
+	// Box
+	public Rectangle bb;
 
 	public Character(String name) {
 		this.name=name;
@@ -38,10 +41,11 @@ public class Character extends Actor {
 		JUMP_VELOCITY = 40f;
 		DAMPING = 0.87f;
 		velocity = new Vector2();
-		state = State.Walking;
+		state = State.Standing;
 		stateTime = 0;
 		facesRight = true;
 		grounded = false;
+		animation = true;
 		init();
 	}
 
@@ -57,14 +61,17 @@ public class Character extends Actor {
 		// figure out the width and height of the Ivis for collision
 		// detection and rendering by converting a Ivis frames pixel
 		// size into world units (1 unit == 16 pixels)
-		WIDTH = 1 / 16f * regions[0].getRegionWidth();
-		HEIGHT = 1 / 16f * regions[0].getRegionHeight();
+		setWidth(1 / 16f * regions[0].getRegionWidth());
+		setHeight(1 / 16f * regions[0].getRegionHeight());
+		
+		bb = new Rectangle(getX(), getY(), getWidth(), getHeight());
 	}
 
 	@Override
 	public void act(float delta) {
 		super.act(delta);
 		update(delta);
+		bb.set(getX(), getY(), getWidth(), getHeight());
 	}
 
 	@Override
@@ -89,11 +96,11 @@ public class Character extends Actor {
 		// on the x-axis, draw the Ivis facing either right
 		// or left
 		if (facesRight) {
-			batch.draw(frame, getX(), getY(), WIDTH, // exch for position
-					HEIGHT);
+			batch.draw(frame, getX(), getY(), getWidth(), // exch for position
+					getHeight());
 		} else {
-			batch.draw(frame, getX() + WIDTH, getY(), // exch for position
-					-WIDTH, HEIGHT);
+			batch.draw(frame, getX() + getWidth(), getY(), // exch for position
+					-getWidth(), getHeight());
 		}
 	}
 	

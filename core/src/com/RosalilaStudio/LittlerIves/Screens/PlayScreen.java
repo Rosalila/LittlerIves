@@ -147,44 +147,44 @@ public class PlayScreen extends AbstractScreen {
 		// perform collision detection & response, on each axis, separately
 		// if the Ivis is moving right, check the tiles to the right of it's
 		// right bounding box edge, otherwise check the ones to the left
-		Rectangle koalaRect = rectPool.obtain();
-		koalaRect.set(Ivis.getX(), Ivis.getY(), Ivis.WIDTH, Ivis.HEIGHT);
+		Rectangle koalaRect = rectPool.obtain(); // unused
+		Ivis.bb.set(Ivis.getX(), Ivis.getY(), Ivis.getWidth(), Ivis.getHeight()); // exch for bb in Character
 		int startX, startY, endX, endY;
 		if(Ivis.getVelocity().x > 0) {
-			startX = endX = (int)(Ivis.getX() + Ivis.WIDTH + Ivis.getVelocity().x);
+			startX = endX = (int)(Ivis.getX() + Ivis.getWidth() + Ivis.getVelocity().x);
 		} else {
 			startX = endX = (int)(Ivis.getX() + Ivis.getVelocity().x);
 		}
 		startY = (int)(Ivis.getY());
-		endY = (int)(Ivis.getY() + Ivis.HEIGHT);
+		endY = (int)(Ivis.getY() + Ivis.getHeight());
 		getTiles(startX, startY, endX, endY, tiles,1);
-		koalaRect.x += Ivis.getVelocity().x;
+		Ivis.bb.x += Ivis.getVelocity().x; // exch for bb in Character
 		for(Rectangle tile: tiles) {
-			if(koalaRect.overlaps(tile)) {
+			if(Ivis.bb.overlaps(tile)) { // exch for bb in Character
 				Ivis.setVelocityX(0); //velocity.x = 0;
 				break;
 			}
 		}
-		koalaRect.x = Ivis.getX();
+		Ivis.bb.x = Ivis.getX(); // exch for bb in Character
 
 		// if the Ivis is moving upwards, check the tiles to the top of it's
 		// top bounding box edge, otherwise check the ones to the bottom
 		if(Ivis.getVelocity().y > 0) {
-			startY = endY = (int)(Ivis.getY() + Ivis.HEIGHT + Ivis.getVelocity().y);
+			startY = endY = (int)(Ivis.getY() + Ivis.getHeight() + Ivis.getVelocity().y);
 		} else {
 			startY = endY = (int)(Ivis.getY() + Ivis.getVelocity().y);
 		}
 		startX = (int)(Ivis.getX());
-		endX = (int)(Ivis.getX() + Ivis.WIDTH);
+		endX = (int)(Ivis.getX() + Ivis.getWidth());
 		getTiles(startX, startY, endX, endY, tiles,1);
-		koalaRect.y += Ivis.getVelocity().y;
+		Ivis.bb.y += Ivis.getVelocity().y; // exch for bb in Character
 		for(Rectangle tile: tiles) {
-			if(koalaRect.overlaps(tile)) {
+			if(Ivis.bb.overlaps(tile)) { // exch for bb in Character
 				// we actually reset the Ivis y-position here
 				// so it is just below/above the tile we collided with
 				// this removes bouncing :)
 				if(Ivis.getVelocity().y > 0) {
-					Ivis.setY(tile.y - Ivis.HEIGHT);
+					Ivis.setY(tile.y - Ivis.getHeight());
 					// we hit a block jumping upwards, let's destroy it!
 					TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(1);
 //					layer.setCell((int)tile.x, (int)tile.y, null);
@@ -200,13 +200,13 @@ public class PlayScreen extends AbstractScreen {
 		//Inicio cambio
 		getTiles(startX, startY, endX, endY, tiles,2);
 		for(Rectangle tile: tiles) {
-			if(koalaRect.overlaps(tile)) {
+			if(Ivis.bb.overlaps(tile)) { // exch for bb in Character
 				TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(2);
 				layer.setCell((int)tile.x, (int)tile.y, null);
 			}
 		}
 		//fin cambio
-		rectPool.free(koalaRect);
+//		rectPool.free(Ivis.bb);
 		Ivis.act(deltaTime);
 
 	}
