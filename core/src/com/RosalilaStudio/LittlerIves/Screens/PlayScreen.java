@@ -33,7 +33,7 @@ public class PlayScreen extends AbstractScreen {
 	private Character Ivis;
 	private boolean in, out;
 	private static int BACKGROUND=0, WALLS=1, COINS=2;
-	private int counterLevel2;
+	private int counterLevel2, counterLevel3;
 
 	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
 		@Override
@@ -54,7 +54,7 @@ public class PlayScreen extends AbstractScreen {
 		// Initialize of Variables
 		in=true; out=true;
 		Paths path = Paths.M;
-		counterLevel2 = 0;
+		counterLevel2 = 0; counterLevel3=0;
 
 		// load the map, set the unit scale to 1/16 (1 unit == 16 pixels)
 		map = new TmxMapLoader().load(path.getPath("nivel" + GlobalNPCs.level + ".tmx"));
@@ -202,11 +202,16 @@ public class PlayScreen extends AbstractScreen {
 		for(Rectangle tile: tiles) {
 			if(Ivis.bb.overlaps(tile)) { // exch for bb in Character
 				TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(2);
-				layer.setCell((int)tile.x, (int)tile.y, null);
+				Cell cell = layer.getCell((int)tile.x, (int)tile.y);
+				MapProperties properties = cell.getTile().getProperties();
+				if(properties.containsKey("Extorcion"))
+					layer.setCell((int)tile.x, (int)tile.y, cell);
+				else
+					layer.setCell((int)tile.x, (int)tile.y, null);
 			}
 		}
 		//fin cambio
-//		rectPool.free(Ivis.bb);
+		rectPool.free(Ivis.bb);
 		Ivis.act(deltaTime);
 
 	}
@@ -249,7 +254,9 @@ public class PlayScreen extends AbstractScreen {
 							game.setScreen(game.MAIN);
 						}else if(properties.containsKey("Extorcion")){
 							System.out.println("Extorcion");
-							game.setScreen(game.MAIN);
+							counterLevel3++;
+							if(counterLevel3==10)
+								game.setScreen(game.MAIN);
 						}else if(properties.containsKey("Die")){
 							System.out.println("Die");
 							game.setScreen(game.MAIN);

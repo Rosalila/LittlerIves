@@ -116,8 +116,8 @@ public class Character extends Actor {
 	
 	public void addVelocityX(int x){
 		switch(x){
-		case 1: velocity.x	=  MAX_VELOCITY; break;
-		case -1: velocity.x	= -MAX_VELOCITY; break;
+			case 1: velocity.x	=  MAX_VELOCITY; break;
+			case -1: velocity.x	= -MAX_VELOCITY; break;
 		}
 	}
 	
