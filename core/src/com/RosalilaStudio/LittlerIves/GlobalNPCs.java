@@ -16,7 +16,7 @@ public class GlobalNPCs {
 	
 	public static void init()
 	{
-		if(level==1)
+		if(level==1 || level==2)
 		{
 			policia = new Character("policia.png");
 		}
@@ -44,9 +44,7 @@ public class GlobalNPCs {
 	{
 		if(level==1)
 		{
-			float x=124f;
-			float y=2f;
-			policia.setPosition(x, y);
+			policia.setPosition(124f, 2f);
 			policia.facesRight = false;
 			policia.draw(batch, 1);
 		}
@@ -63,6 +61,14 @@ public class GlobalNPCs {
 			comprador3.setPosition(176f, 2f);
 			comprador3.facesRight = false;
 			comprador3.draw(batch, 1);
+			
+			policia.setPosition(95f, 2f);
+			policia.facesRight = false;
+			policia.draw(batch, 1);
+			
+			policia.setPosition(100f, 2f);
+			policia.facesRight = true;
+			policia.draw(batch, 1);
 		}
 		if(level==3)
 		{

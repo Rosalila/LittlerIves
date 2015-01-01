@@ -2,7 +2,7 @@ package com.RosalilaStudio.LittlerIves.Screens;
 
 import com.RosalilaStudio.LittlerIves.GlobalNPCs;
 import com.RosalilaStudio.LittlerIves.LittlerIvis;
-import com.RosalilaStudio.LittlerIves.Paths;
+import com.RosalilaStudio.LittlerIves.Path;
 import com.RosalilaStudio.LittlerIves.State;
 import com.RosalilaStudio.LittlerIves.Characters.Character;
 import com.badlogic.gdx.Gdx;
@@ -10,10 +10,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -32,7 +29,6 @@ public class PlayScreen extends AbstractScreen {
 	private OrthographicCamera camera;
 	private Character Ivis;
 	private boolean in, out;
-	private static int BACKGROUND=0, WALLS=1, COINS=2;
 	private int counterLevel2, counterLevel3;
 
 	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
@@ -53,12 +49,12 @@ public class PlayScreen extends AbstractScreen {
 	public void show() {
 		// Initialize of Variables
 		in=true; out=true;
-		Paths path = Paths.M;
+		Path path = Path.M;
 		counterLevel2 = 0; counterLevel3=0;
 
 		// load the map, set the unit scale to 1/16 (1 unit == 16 pixels)
 		map = new TmxMapLoader().load(path.getPath("nivel" + GlobalNPCs.level + ".tmx"));
-		renderer = new OrthogonalTiledMapRenderer(map, 1 / 16f);
+		renderer = new OrthogonalTiledMapRenderer(map, 1 / 16f, game.getSb());
 
 		// create an orthographic camera, shows us 30x20 units of the world
 		camera = new OrthographicCamera();
@@ -69,7 +65,7 @@ public class PlayScreen extends AbstractScreen {
 		Ivis = new Character("ivis2.png");
 		Ivis.setPosition(20, 15); //exch for position (Vector 2)
 
-		path = Paths.S;
+		path = Path.S;
 		Music oggMusic = Gdx.audio.newMusic(Gdx.files.internal(path.getPath("music.ogg")));
 		oggMusic.play();
 
@@ -99,7 +95,7 @@ public class PlayScreen extends AbstractScreen {
 		renderer.render();
 		
 		// render the Ivis
-		renderCharacter(deltaTime);
+		renderCharacter(game.getSb());
 	}
 	
 	private void updateCharacter(float deltaTime) {
@@ -240,7 +236,7 @@ public class PlayScreen extends AbstractScreen {
 					TiledMapTile tile = cell.getTile();
 					MapProperties properties = tile.getProperties();
 					
-					if(num_layer==COINS){
+					if(num_layer==game.LAYER_COIN){
 						if(properties.containsKey("Pointer")){
 							System.out.println("Pointer");
 							game.setScreen(game.MAIN);
@@ -293,8 +289,8 @@ public class PlayScreen extends AbstractScreen {
 		}
 	}
 
-	private void renderCharacter(float deltaTime) {
-		Batch batch = renderer.getSpriteBatch();
+	private void renderCharacter(Batch batch) {
+//		Batch batch = renderer.getSpriteBatch();
 		batch.begin();
 		Ivis.draw(batch, 1);
 		GlobalNPCs.render(batch);

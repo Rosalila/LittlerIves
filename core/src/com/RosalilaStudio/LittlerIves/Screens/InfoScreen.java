@@ -2,7 +2,7 @@ package com.RosalilaStudio.LittlerIves.Screens;
 
 import com.RosalilaStudio.LittlerIves.GlobalNPCs;
 import com.RosalilaStudio.LittlerIves.LittlerIvis;
-import com.RosalilaStudio.LittlerIves.Paths;
+import com.RosalilaStudio.LittlerIves.Path;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
@@ -33,7 +33,7 @@ public class InfoScreen extends AbstractScreen {
 		cont='a';
 		final Image info[] = new Image[2];
 		if(GlobalNPCs.level!=5){
-			info[0] = genSliptImage(game.MANAGER.get(Paths.I.getPath("intro"+GlobalNPCs.level+".png"), Texture.class), game.getWidth(), game.getHeight());
+			info[0] = genSliptImage(game.MANAGER.get(Path.I.getPath("intro"+GlobalNPCs.level+".png"), Texture.class), game.getWidth(), game.getHeight());
 			info[0].addListener(new InputListener(){
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y,
@@ -44,7 +44,7 @@ public class InfoScreen extends AbstractScreen {
 			});
 			stage.addActor(info[0]);
 		}else{
-			info[1] = genSliptImage(game.MANAGER.get(Paths.I.getPath("intro"+GlobalNPCs.level+"a.png"), Texture.class), game.getWidth(), game.getHeight());
+			info[1] = genSliptImage(game.MANAGER.get(Path.I.getPath("intro"+GlobalNPCs.level+"a.png"), Texture.class), game.getWidth(), game.getHeight());
 			info[1].addListener(new InputListener(){
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y,
@@ -54,7 +54,7 @@ public class InfoScreen extends AbstractScreen {
 				}
 			});
 			
-			info[0] = genSliptImage(game.MANAGER.get(Paths.I.getPath("intro"+GlobalNPCs.level+"b.png"), Texture.class), game.getWidth(), game.getHeight());
+			info[0] = genSliptImage(game.MANAGER.get(Path.I.getPath("intro"+GlobalNPCs.level+"b.png"), Texture.class), game.getWidth(), game.getHeight());
 			info[0].addListener(new InputListener(){
 				@Override
 				public boolean touchDown(InputEvent event, float x, float y,

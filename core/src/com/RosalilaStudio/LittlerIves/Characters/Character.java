@@ -1,6 +1,6 @@
 package com.RosalilaStudio.LittlerIves.Characters;
 
-import com.RosalilaStudio.LittlerIves.Paths;
+import com.RosalilaStudio.LittlerIves.Path;
 import com.RosalilaStudio.LittlerIves.State;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -51,7 +51,7 @@ public class Character extends Actor {
 
 	private void init() {
 		// load the Ivis frames, split them, and assign them to Animations
-		koalaTexture = new Texture(Paths.C.getPath(name));
+		koalaTexture = new Texture(Path.C.getPath(name));
 		TextureRegion[] regions = TextureRegion.split(koalaTexture, 18, 26)[0];
 		stand = new Animation(0, regions[0]);
 		jump = new Animation(0, regions[1]);
@@ -175,9 +175,9 @@ public class Character extends Actor {
 		return velocity;
 	}
 	
-	public Animation getStand() {
-		return stand;
-	}
+//	public Animation getStand() {
+//		return stand;
+//	}
 	
 //	public State getState() {
 //		return state;

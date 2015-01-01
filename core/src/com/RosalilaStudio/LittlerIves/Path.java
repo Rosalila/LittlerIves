@@ -1,6 +1,6 @@
 package com.RosalilaStudio.LittlerIves;
 
-public enum Paths {
+public enum Path {
 	
 	C("characters"){
 		@Override
@@ -29,7 +29,7 @@ public enum Paths {
 	
 	public String path;
 	
-	private Paths(String path) {
+	private Path(String path) {
 		this.path=path;
 	}
 	

@@ -3,7 +3,7 @@ package com.RosalilaStudio.LittlerIves.Screens;
 import javax.sound.midi.Patch;
 
 import com.RosalilaStudio.LittlerIves.LittlerIvis;
-import com.RosalilaStudio.LittlerIves.Paths;
+import com.RosalilaStudio.LittlerIves.Path;
 import com.RosalilaStudio.LittlerIves.Listeners.InputDYAListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -37,7 +37,7 @@ public class MenuScreen extends AbstractScreen {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
-		Paths path = Paths.I;
+		Path path = Path.I;
 		
 		camera = new OrthographicCamera(1, h/w);
 		batch = new SpriteBatch();

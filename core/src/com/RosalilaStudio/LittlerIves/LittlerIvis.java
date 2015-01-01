@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class LittlerIvis extends Game {
 
+	public static int LAYER_BACKGROUND=0, LAYER_WALL=1, LAYER_COIN=2;
 	public static AbstractScreen MAIN, PLAY, INFO;
 	public static AssetManager MANAGER;
 	private int width, height;
@@ -44,12 +45,12 @@ public class LittlerIvis extends Game {
 
 	private void loadAssets() {
 		//Intros de Informacion
-		MANAGER.load(Paths.I.getPath("intro1.png"),Texture.class);
-		MANAGER.load(Paths.I.getPath("intro2.png"),Texture.class);
-		MANAGER.load(Paths.I.getPath("intro3.png"),Texture.class);
-		MANAGER.load(Paths.I.getPath("intro4.png"),Texture.class);
-		MANAGER.load(Paths.I.getPath("intro5a.png"),Texture.class);
-		MANAGER.load(Paths.I.getPath("intro5b.png"),Texture.class);
+		MANAGER.load(Path.I.getPath("intro1.png"),Texture.class);
+		MANAGER.load(Path.I.getPath("intro2.png"),Texture.class);
+		MANAGER.load(Path.I.getPath("intro3.png"),Texture.class);
+		MANAGER.load(Path.I.getPath("intro4.png"),Texture.class);
+		MANAGER.load(Path.I.getPath("intro5a.png"),Texture.class);
+		MANAGER.load(Path.I.getPath("intro5b.png"),Texture.class);
 	}
 
 	public int getWidth() {
