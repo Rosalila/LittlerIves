@@ -1,11 +1,17 @@
 package com.RosalilaStudio.LittlerIves;
 
 import com.RosalilaStudio.LittlerIves.Characters.Character;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.math.Rectangle;
 
 public class GlobalNPCs {
 	
-	private static Character policia;
+	public static Character policia;
 	public static Character comprador1;
 	public static Character comprador2;
 	public static Character comprador3;
@@ -26,15 +32,15 @@ public class GlobalNPCs {
 			comprador2 = new Character("comprador2.png");
 			comprador3 = new Character("comprador3.png");
 		}
-		if(level==3)
+		else if(level==3)
 		{
 			extorsionada = new Character("extorsionada.png");
 		}
-		if(level==4)
+		else if(level==4)
 		{
 			asesinado = new Character("asesinado.png");
 		}
-		if(level==5)
+		else if(level==5)
 		{
 			jefe = new Character("jefe.png");
 		}
@@ -45,47 +51,38 @@ public class GlobalNPCs {
 		if(level==1)
 		{
 			policia.setPosition(124f, 2f);
-			policia.facesRight = false;
 			policia.draw(batch, 1);
 		}
-		if(level==2)
+		else if(level==2)
 		{
 			comprador1.setPosition(68f, 10f);
-			comprador1.facesRight = false;
 			comprador1.draw(batch, 1);
 			
 			comprador2.setPosition(110f, 14f);
-			comprador2.facesRight = false;
 			comprador2.draw(batch, 1);
 			
 			comprador3.setPosition(176f, 2f);
-			comprador3.facesRight = false;
 			comprador3.draw(batch, 1);
 			
-			policia.setPosition(95f, 2f);
-			policia.facesRight = false;
+			policia.setPosition(95f, 2f, false);
 			policia.draw(batch, 1);
 			
-			policia.setPosition(100f, 2f);
-			policia.facesRight = true;
+			policia.setPosition(100f, 2f, true);
 			policia.draw(batch, 1);
 		}
-		if(level==3)
+		else if(level==3)
 		{
 			extorsionada.setPosition(122f, 2f);
-			extorsionada.facesRight = false;
 			extorsionada.draw(batch, 1);
 		}
-		if(level==4)
+		else if(level==4)
 		{
 			asesinado.setPosition(90f, 7f);
-			asesinado.facesRight=false;
 			asesinado.draw(batch, 1);
 		}
-		if(level==5)
+		else if(level==5)
 		{
 			jefe.setPosition(38f, 2f);
-			jefe.facesRight=false;
 			jefe.draw(batch, 1);
 		}
 	}

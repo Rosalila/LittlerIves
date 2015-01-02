@@ -39,8 +39,6 @@ public class PlayScreen extends AbstractScreen {
 	};
 	private Array<Rectangle> tiles = new Array<Rectangle>();
 
-	private static final float GRAVITY = -2.5f;
-
 	public PlayScreen(LittlerIvis game) {
 		super(game);
 	}
@@ -63,7 +61,7 @@ public class PlayScreen extends AbstractScreen {
 
 		// create the Ivis we want to move around the world
 		Ivis = new Character("ivis2.png");
-		Ivis.setPosition(20, 15); //exch for position (Vector 2)
+		Ivis.setPosition(20, 15, true);
 
 		path = Path.S;
 		Music oggMusic = Gdx.audio.newMusic(Gdx.files.internal(path.getPath("music.ogg")));
@@ -86,7 +84,7 @@ public class PlayScreen extends AbstractScreen {
 		updateCharacter(deltaTime);
 
 		// let the camera follow the koala, x-axis only
-		camera.position.x = Ivis.getX(); //getX(); // exch for position (Vector 2)
+		camera.position.x = Ivis.getX();
 		camera.update();
 		
 		// set the tile map rendere view based on what the
@@ -104,36 +102,36 @@ public class PlayScreen extends AbstractScreen {
 		Ivis.stateTime += deltaTime;
 
 		// check input and apply to velocity & state
-		if((Gdx.input.isKeyPressed(Keys.SPACE) || isTouched(0.75f, 1)) && Ivis.grounded) {
-			Ivis.addVelocityY(); //velocity.y += Character.JUMP_VELOCITY;
+		if((Gdx.input.isKeyPressed(Keys.SPACE) || isTouched(0.75f, 1)) && Ivis.isGrounded()) {
+			Ivis.addVelocityY();
 			Ivis.state = State.Jumping;
-			Ivis.grounded =false;
+			Ivis.unGrounded();
 		}
 
 		if(Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A) || isTouched(0, 0.25f)) {
-			Ivis.addVelocityX(-1); //velocity.x = -Character.MAX_VELOCITY;
-			if(Ivis.grounded) Ivis.state = State.Walking;
-			Ivis.facesRight = false;
+			Ivis.addVelocityX(-1);
+			if(Ivis.isGrounded()) Ivis.state = State.Walking;
+			Ivis.faceLeft();
 		}
 
 		if(Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.D) || isTouched(0.25f, 0.5f)) {
-			Ivis.addVelocityX(1); //velocity.x = Character.MAX_VELOCITY;
-			if(Ivis.grounded) Ivis.state = State.Walking;
-			Ivis.facesRight = true;
+			Ivis.addVelocityX(1);
+			if(Ivis.isGrounded()) Ivis.state = State.Walking;
+			Ivis.faceRight();
 		}
 
 		// apply gravity if we are falling
-		Ivis.addVelocity(0, GRAVITY); //velocity.add(0, GRAVITY);
+		Ivis.addVelocity(0, game.GRAVITY);
 
 		// clamp the velocity to the maximum, x-axis only
-		if(Math.abs(Ivis.getVelocity().x) > Ivis.MAX_VELOCITY) {
-			Ivis.getVelocity().x = Math.signum(Ivis.getVelocity().x) * Ivis.MAX_VELOCITY;
+		if(Math.abs(Ivis.getVelocity().x) > Ivis.maxVelocity) {
+			Ivis.getVelocity().x = Math.signum(Ivis.getVelocity().x) * Ivis.maxVelocity;
 		}
 
-		// clamp the velocity to 0 if it's < 1, and set the state to standign
+		// clamp the velocity to 0 if it's < 1, and set the state to standing
 		if(Math.abs(Ivis.getVelocity().x) < 1) {
-			Ivis.setVelocityX(0); //velocity.x = 0;
-			if(Ivis.grounded) Ivis.state = State.Standing;
+			Ivis.setVelocityX(0);
+			if(Ivis.isGrounded()) Ivis.state = State.Standing;
 		}
 
 		// multiply by delta time so we know how far we go
@@ -143,8 +141,8 @@ public class PlayScreen extends AbstractScreen {
 		// perform collision detection & response, on each axis, separately
 		// if the Ivis is moving right, check the tiles to the right of it's
 		// right bounding box edge, otherwise check the ones to the left
-		Rectangle koalaRect = rectPool.obtain(); // unused
-		Ivis.bb.set(Ivis.getX(), Ivis.getY(), Ivis.getWidth(), Ivis.getHeight()); // exch for bb in Character
+		Ivis.bb = rectPool.obtain();
+		Ivis.bb.set(Ivis.getX(), Ivis.getY(), Ivis.getWidth(), Ivis.getHeight());
 		int startX, startY, endX, endY;
 		if(Ivis.getVelocity().x > 0) {
 			startX = endX = (int)(Ivis.getX() + Ivis.getWidth() + Ivis.getVelocity().x);
@@ -154,14 +152,14 @@ public class PlayScreen extends AbstractScreen {
 		startY = (int)(Ivis.getY());
 		endY = (int)(Ivis.getY() + Ivis.getHeight());
 		getTiles(startX, startY, endX, endY, tiles,1);
-		Ivis.bb.x += Ivis.getVelocity().x; // exch for bb in Character
+		Ivis.bb.x += Ivis.getVelocity().x;
 		for(Rectangle tile: tiles) {
-			if(Ivis.bb.overlaps(tile)) { // exch for bb in Character
-				Ivis.setVelocityX(0); //velocity.x = 0;
+			if(Ivis.bb.overlaps(tile)) {
+				Ivis.setVelocityX(0);
 				break;
 			}
 		}
-		Ivis.bb.x = Ivis.getX(); // exch for bb in Character
+		Ivis.bb.x = Ivis.getX();
 
 		// if the Ivis is moving upwards, check the tiles to the top of it's
 		// top bounding box edge, otherwise check the ones to the bottom
@@ -173,30 +171,31 @@ public class PlayScreen extends AbstractScreen {
 		startX = (int)(Ivis.getX());
 		endX = (int)(Ivis.getX() + Ivis.getWidth());
 		getTiles(startX, startY, endX, endY, tiles,1);
-		Ivis.bb.y += Ivis.getVelocity().y; // exch for bb in Character
+		Ivis.bb.y += Ivis.getVelocity().y;
 		for(Rectangle tile: tiles) {
-			if(Ivis.bb.overlaps(tile)) { // exch for bb in Character
+			if(Ivis.bb.overlaps(tile)) {
 				// we actually reset the Ivis y-position here
 				// so it is just below/above the tile we collided with
 				// this removes bouncing :)
 				if(Ivis.getVelocity().y > 0) {
 					Ivis.setY(tile.y - Ivis.getHeight());
 					// we hit a block jumping upwards, let's destroy it!
-					TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(1);
-//					layer.setCell((int)tile.x, (int)tile.y, null);
+//					TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(1);
+//					Cell cell = layer.getCell((int)tile.x, (int)tile.y);
+//					layer.setCell((int)tile.x, (int)tile.y, cell);
 				} else {
 					Ivis.setY(tile.y + tile.height);
 					// if we hit the ground, mark us as grounded so we can jump
-					Ivis.grounded = true;
+					Ivis.grounded();
 				}
-				Ivis.setVelocityY(0); //velocity.y = 0;
+				Ivis.setVelocityY(0);
 				break;
 			}
 		}
 		//Inicio cambio
 		getTiles(startX, startY, endX, endY, tiles,2);
 		for(Rectangle tile: tiles) {
-			if(Ivis.bb.overlaps(tile)) { // exch for bb in Character
+			if(Ivis.bb.overlaps(tile)) {
 				TiledMapTileLayer layer = (TiledMapTileLayer)map.getLayers().get(2);
 				Cell cell = layer.getCell((int)tile.x, (int)tile.y);
 				MapProperties properties = cell.getTile().getProperties();
@@ -290,7 +289,6 @@ public class PlayScreen extends AbstractScreen {
 	}
 
 	private void renderCharacter(Batch batch) {
-//		Batch batch = renderer.getSpriteBatch();
 		batch.begin();
 		Ivis.draw(batch, 1);
 		GlobalNPCs.render(batch);

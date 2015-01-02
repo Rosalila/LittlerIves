@@ -1,5 +1,6 @@
 package com.RosalilaStudio.LittlerIves.Characters;
 
+import com.RosalilaStudio.LittlerIves.LittlerIvis;
 import com.RosalilaStudio.LittlerIves.Path;
 import com.RosalilaStudio.LittlerIves.State;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,39 +12,34 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Character extends Actor {
+	// Name of the Character
 	private String name;
 
-	public float MAX_VELOCITY;
-	public float JUMP_VELOCITY;
-	public float DAMPING;
-
-	// Velocity, State and direction of the Character
-	private final Vector2 velocity;
+	// State, maxVelocity, jumpVelocity, damping and stateTime
 	public State state;
-	public float stateTime;
-	public boolean facesRight;
-	public boolean grounded;
-	public boolean animation;
+	public float maxVelocity, jumpVelocity, damping, stateTime;
+
+	// Velocity, animation and direction of the Character
+	private final Vector2 velocity;
+	private boolean facesRight, grounded, animation;
 
 	// Textures and Animations
-	private Texture koalaTexture;
+	private Texture texture;
 	private TextureRegion frame;
-	private Animation stand;
-	private Animation walk;
-	private Animation jump;
+	private Animation stand, walk, jump;
 	
-	// Box
+	// Box to detect when overLaps
 	public Rectangle bb;
 
 	public Character(String name) {
 		this.name=name;
-		MAX_VELOCITY = 10f;
-		JUMP_VELOCITY = 40f;
-		DAMPING = 0.87f;
+		maxVelocity = 10f;
+		jumpVelocity = 40f;
+		damping = 0.87f;
 		velocity = new Vector2();
 		state = State.Standing;
 		stateTime = 0;
-		facesRight = true;
+		facesRight = false;
 		grounded = false;
 		animation = true;
 		init();
@@ -51,8 +47,8 @@ public class Character extends Actor {
 
 	private void init() {
 		// load the Ivis frames, split them, and assign them to Animations
-		koalaTexture = new Texture(Path.C.getPath(name));
-		TextureRegion[] regions = TextureRegion.split(koalaTexture, 18, 26)[0];
+		texture = LittlerIvis.MANAGER.get(Path.C.getPath(name)); //new Texture(Path.C.getPath(name)); //
+		TextureRegion[] regions = TextureRegion.split(texture, 18, 26)[0];
 		stand = new Animation(0, regions[0]);
 		jump = new Animation(0, regions[1]);
 		walk = new Animation(0.15f, regions[2], regions[3], regions[4]);
@@ -116,13 +112,13 @@ public class Character extends Actor {
 	
 	public void addVelocityX(int x){
 		switch(x){
-			case 1: velocity.x	=  MAX_VELOCITY; break;
-			case -1: velocity.x	= -MAX_VELOCITY; break;
+			case 1: velocity.x	=  maxVelocity; break;
+			case -1: velocity.x	= -maxVelocity; break;
 		}
 	}
 	
 	public void addVelocityY() {
-		velocity.y+=JUMP_VELOCITY;
+		velocity.y+=jumpVelocity;
 	}
 	
 	private void update(float delta){
@@ -134,21 +130,28 @@ public class Character extends Actor {
 
 		// Apply damping to the velocity on the x-axis so we don't
 		// walk infinitely once a key was pressed
-		velocity.x *= DAMPING;
+		velocity.x *= damping;
 	}
 	
 	//Seters
-//	public void setStateTime(float stateTime) {
-//		this.stateTime += stateTime;
-//	}
-//	
-//	public void setState(State state) {
-//		this.state = state;
-//	}
-//	
-//	public void setGrounded(boolean grounded) {
-//		this.grounded = grounded;
-//	}
+	public void grounded() {
+		grounded = true;
+	}
+	
+	public void unGrounded() {
+		grounded = false;
+	}
+	
+	/**
+	 * call to setPosition's Parent and set faceRight gave into param faceRight
+	 * @param x
+	 * @param y
+	 * @param faceRight
+	 */
+	public void setPosition(float x, float y, boolean faceRight) {
+		setPosition(x, y);
+		facesRight=faceRight;
+	}
 	
 	public void setVelocityX(float x){
 		velocity.x=x;
@@ -158,33 +161,20 @@ public class Character extends Actor {
 		velocity.y=y;
 	}
 	
-//	public void setFacesRight(boolean facesRight) {
-//		this.facesRight = facesRight;
-//	}
+	public void faceRight() {
+		facesRight = true;
+	}
+	public void faceLeft() {
+		facesRight = false;
+	}
 	
 	//Geters
-//	public boolean isGrounded(){
-//		return grounded;
-//	}
-//	
-//	public Vector2 getPosition() {
-//		return position;
-//	}
+	public boolean isGrounded(){
+		return grounded;
+	}
 	
 	public Vector2 getVelocity() {
 		return velocity;
 	}
-	
-//	public Animation getStand() {
-//		return stand;
-//	}
-	
-//	public State getState() {
-//		return state;
-//	}
-//	
-//	public float getStateTime() {
-//		return stateTime;
-//	}
 
 }
