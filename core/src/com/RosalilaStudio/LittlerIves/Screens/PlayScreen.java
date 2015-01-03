@@ -21,6 +21,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 
 public class PlayScreen extends AbstractScreen {
 
@@ -31,12 +32,7 @@ public class PlayScreen extends AbstractScreen {
 	private boolean in, out;
 	private int counterLevel2, counterLevel3;
 
-	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
-		@Override
-		protected Rectangle newObject() {
-			return new Rectangle();
-		}
-	};
+	private Pool<Rectangle> rectPool = Pools.get(Rectangle.class);
 	private Array<Rectangle> tiles = new Array<Rectangle>();
 
 	public PlayScreen(LittlerIvis game) {
@@ -47,11 +43,10 @@ public class PlayScreen extends AbstractScreen {
 	public void show() {
 		// Initialize of Variables
 		in=true; out=true;
-		Path path = Path.M;
 		counterLevel2 = 0; counterLevel3=0;
 
 		// load the map, set the unit scale to 1/16 (1 unit == 16 pixels)
-		map = new TmxMapLoader().load(path.getPath("nivel" + GlobalNPCs.level + ".tmx"));
+		map = new TmxMapLoader().load(Path.M.getPath("nivel" + GlobalNPCs.level + ".tmx"));
 		renderer = new OrthogonalTiledMapRenderer(map, 1 / 16f, game.getSb());
 
 		// create an orthographic camera, shows us 30x20 units of the world
@@ -63,8 +58,7 @@ public class PlayScreen extends AbstractScreen {
 		Ivis = new Character("ivis2.png");
 		Ivis.setPosition(20, 15, true);
 
-		path = Path.S;
-		Music oggMusic = Gdx.audio.newMusic(Gdx.files.internal(path.getPath("music.ogg")));
+		Music oggMusic = Gdx.audio.newMusic(Gdx.files.internal(Path.S.getPath("music.ogg")));
 		oggMusic.play();
 
 		GlobalNPCs.init();
@@ -77,14 +71,16 @@ public class PlayScreen extends AbstractScreen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		// get the delta time
-		float deltaTime = Gdx.graphics.getDeltaTime();
+//		float deltaTime = Gdx.graphics.getDeltaTime();
 
 		// update the Ivis (process input, collision detection, position
 		// update)
-		updateCharacter(deltaTime);
-
-		// let the camera follow the koala, x-axis only
+		updateCharacter(delta);
+		
+		// let the camera follow Ivis, x-axis only
 		camera.position.x = Ivis.getX();
+		if(Ivis.getY()>11)
+			camera.position.y = Ivis.getY();
 		camera.update();
 		
 		// set the tile map rendere view based on what the
@@ -94,12 +90,13 @@ public class PlayScreen extends AbstractScreen {
 		
 		// render the Ivis
 		renderCharacter(game.getSb());
+		GlobalNPCs.detectColicions(Ivis, delta);
 	}
-	
+
 	private void updateCharacter(float deltaTime) {
 		
 		if(deltaTime == 0) return;
-		Ivis.stateTime += deltaTime;
+//		Ivis.stateTime += deltaTime; //try it putting into act 
 
 		// check input and apply to velocity & state
 		if((Gdx.input.isKeyPressed(Keys.SPACE) || isTouched(0.75f, 1)) && Ivis.isGrounded()) {
@@ -121,7 +118,7 @@ public class PlayScreen extends AbstractScreen {
 		}
 
 		// apply gravity if we are falling
-		Ivis.addVelocity(0, game.GRAVITY);
+		Ivis.addVelocity(0, LittlerIvis.GRAVITY);
 
 		// clamp the velocity to the maximum, x-axis only
 		if(Math.abs(Ivis.getVelocity().x) > Ivis.maxVelocity) {
@@ -235,33 +232,33 @@ public class PlayScreen extends AbstractScreen {
 					TiledMapTile tile = cell.getTile();
 					MapProperties properties = tile.getProperties();
 					
-					if(num_layer==game.LAYER_COIN){
+					if(num_layer==LittlerIvis.LAYER_COIN){
 						if(properties.containsKey("Pointer")){
 							System.out.println("Pointer");
-							game.setScreen(game.MAIN);
+							game.setScreen(LittlerIvis.MAIN);
 						}else if(properties.containsKey("Droga")){
 							System.out.println("Droga");
 							counterLevel2++;
 							if(counterLevel2==3)
-								game.setScreen(game.MAIN);
+								game.setScreen(LittlerIvis.MAIN);
 						}else if(properties.containsKey("Matar")){
 							System.out.println("Matar");
-							game.setScreen(game.MAIN);
+							game.setScreen(LittlerIvis.MAIN);
 						}else if(properties.containsKey("Extorcion")){
 							System.out.println("Extorcion");
 							counterLevel3++;
 							if(counterLevel3==10)
-								game.setScreen(game.MAIN);
+								game.setScreen(LittlerIvis.MAIN);
 						}else if(properties.containsKey("Die")){
 							System.out.println("Die");
-							game.setScreen(game.MAIN);
+							game.setScreen(LittlerIvis.MAIN);
 						}
 					
 						Iglesia(properties);
 					}else{
 						if(properties.containsKey("hola")){
 							System.out.println("test");
-							game.setScreen(game.MAIN);
+							game.setScreen(LittlerIvis.MAIN);
 						}
 					}
 					
@@ -283,7 +280,7 @@ public class PlayScreen extends AbstractScreen {
 			if(properties.containsKey("Salir")){
 				System.out.println("Salir");
 				out=false;
-				game.setScreen(game.MAIN);
+				game.setScreen(LittlerIvis.MAIN);
 			}
 		}
 	}

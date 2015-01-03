@@ -21,7 +21,7 @@ public class Character extends Actor {
 
 	// Velocity, animation and direction of the Character
 	private final Vector2 velocity;
-	private boolean facesRight, grounded, animation;
+	private boolean facesRight, grounded;
 
 	// Textures and Animations
 	private Texture texture;
@@ -30,8 +30,8 @@ public class Character extends Actor {
 	
 	// Box to detect when overLaps
 	public Rectangle bb;
-
-	public Character(String name) {
+	
+	public Character(float x, float y, String name) {
 		this.name=name;
 		maxVelocity = 10f;
 		jumpVelocity = 40f;
@@ -41,8 +41,12 @@ public class Character extends Actor {
 		stateTime = 0;
 		facesRight = false;
 		grounded = false;
-		animation = true;
+		setPosition(x, y);
 		init();
+	}
+
+	public Character(String name) {
+		this(0, 0, name);
 	}
 
 	private void init() {
@@ -67,7 +71,10 @@ public class Character extends Actor {
 	public void act(float delta) {
 		super.act(delta);
 		update(delta);
-		bb.set(getX(), getY(), getWidth(), getHeight());
+		bb.x = getX();
+		bb.y = getY();
+		bb.width = getWidth();
+		bb.height = getHeight();
 	}
 
 	@Override
@@ -122,6 +129,7 @@ public class Character extends Actor {
 	}
 	
 	private void update(float delta){
+		stateTime += delta;
 		
 		// unscale the velocity by the inverse delta time and set
 		// the latest position
@@ -175,6 +183,10 @@ public class Character extends Actor {
 	
 	public Vector2 getVelocity() {
 		return velocity;
+	}
+	
+	public boolean isFaceRight(){
+		return facesRight;
 	}
 
 }

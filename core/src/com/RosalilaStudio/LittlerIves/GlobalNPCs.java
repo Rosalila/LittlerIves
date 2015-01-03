@@ -2,16 +2,11 @@ package com.RosalilaStudio.LittlerIves;
 
 import com.RosalilaStudio.LittlerIves.Characters.Character;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.maps.MapProperties;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.math.Rectangle;
 
 public class GlobalNPCs {
 	
-	public static Character policia;
+	public static Character policia, policia2;
 	public static Character comprador1;
 	public static Character comprador2;
 	public static Character comprador3;
@@ -24,13 +19,14 @@ public class GlobalNPCs {
 	{
 		if(level==1 || level==2)
 		{
-			policia = new Character("policia.png");
+			policia = new Character(124f, 2f, "policia.png");
 		}
 		if(level==2)
 		{
 			comprador1 = new Character("comprador1.png");
 			comprador2 = new Character("comprador2.png");
 			comprador3 = new Character("comprador3.png");
+			policia2 = new Character(100f, 2f, "policia.png");
 		}
 		else if(level==3)
 		{
@@ -50,7 +46,6 @@ public class GlobalNPCs {
 	{
 		if(level==1)
 		{
-			policia.setPosition(124f, 2f);
 			policia.draw(batch, 1);
 		}
 		else if(level==2)
@@ -67,8 +62,8 @@ public class GlobalNPCs {
 			policia.setPosition(95f, 2f, false);
 			policia.draw(batch, 1);
 			
-			policia.setPosition(100f, 2f, true);
-			policia.draw(batch, 1);
+			policia2.setPosition(100f, 2f, true);
+			policia2.draw(batch, 1);
 		}
 		else if(level==3)
 		{
@@ -84,6 +79,30 @@ public class GlobalNPCs {
 		{
 			jefe.setPosition(38f, 2f);
 			jefe.draw(batch, 1);
+		}
+	}
+	
+	public static void detectColicions(Character Ivis, float deltaTime) {
+		switch(level){
+		case 1:
+			if(Ivis.bb.overlaps(GlobalNPCs.policia.bb)){
+				System.out.println("Arrived");
+			}
+			GlobalNPCs.policia.act(deltaTime);
+			break;
+		case 2:
+			if(Ivis.bb.overlaps(GlobalNPCs.policia.bb)|| Ivis.bb.overlaps(GlobalNPCs.policia2.bb)){
+				System.out.println("Arrived");
+			}
+			GlobalNPCs.policia.act(deltaTime);
+			GlobalNPCs.policia2.act(deltaTime);
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
 		}
 	}
 }
